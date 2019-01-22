@@ -2,6 +2,12 @@ import os
 import re
 from java import *
 
+NT_SLASH = "\"; POSIX_SLASH = "/"; _SLASH = ""
+if os.name == 'nt':
+    _SLASH = NT_SLASH
+else:
+    _SLASH = POSIX_SLASH
+
 def remove_comments(string):
     pattern = r"(\".*?\"|\'.*?\')|(/\*.*?\*/|//[^\r\n]*$)"
     # first group captures quoted strings (double or single)
@@ -23,7 +29,7 @@ def code_list(startpath):
             dirs.remove('.git')
         for f in files:
             if '.java' in f:
-                code_files.append([root + "/" + f, f])
+                code_files.append([root + _SLASH + f, f])
     return code_files
 
 def files_info(filepath, conection):
@@ -34,8 +40,8 @@ def files_info(filepath, conection):
             total = total + line
     aux = remove_comments(total).split("\n")
     for line in aux:
-        if conection in line and filepath.split("/")[-1] not in result :
-            result = result + "" + filepath.split("/")[-1]
+        if conection in line and filepath.split(_SLASH)[-1] not in result :
+            result = result + "" + filepath.split(_SLASH)[-1]
     return result
 
 def find_connection(path, name):
